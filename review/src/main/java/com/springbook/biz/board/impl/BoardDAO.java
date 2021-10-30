@@ -54,6 +54,7 @@ public class BoardDAO {
 			stmt = conn.prepareStatement(BOARD_UPDATE);
 			stmt.setString(1, vo.getTitle());
 			stmt.setString(2, vo.getContent());
+			stmt.setInt(3, vo.getSeq());
 			stmt.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();

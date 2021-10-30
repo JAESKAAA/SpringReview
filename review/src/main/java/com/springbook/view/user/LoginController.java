@@ -2,16 +2,19 @@ package com.springbook.view.user;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import com.springbook.biz.user.UserVO;
 import com.springbook.biz.user.impl.UserDAO;
-import com.springbook.view.controller.Controller;
 
 public class LoginController implements Controller{
 
 	//1. 
 	@Override
-	public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) {
 		//1. 요청정보 받아주기
 		String id = request.getParameter("id");
 		String password = request.getParameter("password");
@@ -24,11 +27,17 @@ public class LoginController implements Controller{
 		UserDAO userDAO = new UserDAO();
 		UserVO user = userDAO.getUser(vo);
 		
+		HttpSession session = request.getSession();
+		session.setAttribute("user", user);
+		
+		ModelAndView mav = new ModelAndView();
+		
 		if(user != null) {
-			return "getBoardList.do";
+			mav.setViewName("redirect:getBoardList.do"); 
 		} else {
-			return "login";
+			mav.setViewName("redirect:login.jsp");
 		}
+		return mav;
 	
 	}
 }

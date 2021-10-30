@@ -18,6 +18,10 @@
 					<input type="text" name="title"></td>
 				</tr>
 				<tr>
+					<td bgcolor="orange" width="70">작성자</td><td align="left">
+					<input type="text" name="writer" value="${user.name }" readonly /></td>
+				</tr>
+				<tr>
 					<td bgcolor="orange">내용</td><td align="left">
 					<textarea name="content" cols="40" rows="10"></textarea></td>
 				</tr>
@@ -28,7 +32,7 @@
 			</table>
 		</form>
 		<hr>
-		<a href="getBoardList.jsp">글 목록 가기</a>
+		<a href="getBoardList.do">글 목록 가기</a>
 	</center>
 </body>
 </html>
