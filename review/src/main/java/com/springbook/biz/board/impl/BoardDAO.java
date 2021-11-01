@@ -47,7 +47,7 @@ public class BoardDAO {
 	}
 	
 	//글 수정
-	public void upadateBoard(BoardVO vo) {
+	public void updateBoard(BoardVO vo) {
 		System.out.println("====> JDBC로 upadateBoard() 기능 처리");
 		try {
 			conn = JDBCUtil.getConnection();
