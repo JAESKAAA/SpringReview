@@ -1,43 +1,37 @@
 package com.springbook.view.user;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.springbook.biz.user.UserVO;
 import com.springbook.biz.user.impl.UserDAO;
 
-public class LoginController implements Controller{
+@Controller
+public class LoginController {
 
-	//1. 
-	@Override
-	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) {
-		//1. 요청정보 받아주기
-		String id = request.getParameter("id");
-		String password = request.getParameter("password");
+	@RequestMapping(value="/login.do", method=RequestMethod.GET)
+	public String loginView(@ModelAttribute("user")UserVO vo) {
+		vo.setId("user1");
+		vo.setPassword("user1");
 		
+		return "login.jsp";
 		
-		UserVO vo = new UserVO();
-		vo.setId(id);
-		vo.setPassword(password);
+	}
+	
+	@RequestMapping(value="/login.do", method=RequestMethod.POST)
+	public String login(UserVO vo, UserDAO userDAO, HttpSession session) {
 		
-		UserDAO userDAO = new UserDAO();
 		UserVO user = userDAO.getUser(vo);
-		
-		HttpSession session = request.getSession();
 		session.setAttribute("user", user);
 		
-		ModelAndView mav = new ModelAndView();
-		
 		if(user != null) {
-			mav.setViewName("redirect:getBoardList.do"); 
+			return "getBoardList.do"; 
 		} else {
-			mav.setViewName("redirect:login.jsp");
+			return "redirect:login.jsp";
 		}
-		return mav;
-	
 	}
 }
