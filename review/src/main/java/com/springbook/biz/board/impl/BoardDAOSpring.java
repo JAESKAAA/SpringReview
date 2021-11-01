@@ -22,6 +22,8 @@ public class BoardDAOSpring  {
 	private final String BOARD_DELETE = "DELETE FROM BOARD WHERE SEQ = ?";
 	private final String BOARD_GET = "SELECT * FROM BOARD WHERE SEQ = ?";
 	private final String BOARD_LIST = "SELECT * FROM BOARD ORDER BY SEQ DESC";
+	private final String BOARD_LIST_T = "SELECT * FROM BOARD WHERE TITLE LIKE '%' || ? || '%' ORDER BY SEQ DESC";
+	private final String BOARD_LIST_C = "SELECT * FROM BOARD WHERE CONTENT LIKE '%' || ? || '%' ORDER BY SEQ DESC";
 	
 	//CRUD 기능의 메소드 구현
 	//글 등록
@@ -31,7 +33,7 @@ public class BoardDAOSpring  {
 	}
 	
 	//글 수정
-	public void upadateBoard(BoardVO vo) {
+	public void updateBoard(BoardVO vo) {
 		System.out.println("====> JDBC로 upadateBoard() 기능 처리");
 		jdbcTemplate.update(BOARD_UPDATE, vo.getTitle(), vo.getContent(), vo.getSeq());
 	}
@@ -53,6 +55,12 @@ public class BoardDAOSpring  {
 	//글 목록 조회
 	public List<BoardVO> getBoardList(BoardVO vo) {
 		System.out.println("====> JDBC로 getBoard() 기능 처리");
-		return jdbcTemplate.query(BOARD_LIST, new BoardRowMapper());
+		Object[] args = {vo.getSearchKeyword()};
+		if(vo.getSearchCondition().equals("TITLE")) {
+			return jdbcTemplate.query(BOARD_LIST_T, args, new BoardRowMapper());
+		}else if(vo.getSearchCondition().equals("CONTENT")) {
+			return jdbcTemplate.query(BOARD_LIST_C, args, new BoardRowMapper());
+		}
+		return null;
 	}
 }

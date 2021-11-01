@@ -73,6 +73,9 @@ public class BoardController {
 								 * String keyword,
 								 */
 								BoardVO vo, Model model) {
+		//Null Check
+		if(vo.getSearchCondition() == null) vo.setSearchCondition("TITLE");
+		if(vo.getSearchKeyword() == null) vo.setSearchKeyword("");
 		List<BoardVO> boardList = (List<BoardVO>) boardService.getBoardList(vo);
 		model.addAttribute("boardList",boardList);
 		return "getBoardList.jsp";

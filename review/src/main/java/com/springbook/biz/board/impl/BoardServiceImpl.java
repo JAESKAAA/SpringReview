@@ -29,7 +29,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	public void updateBoard(BoardVO vo) {
-		boardDAO.upadateBoard(vo);
+		boardDAO.updateBoard(vo);
 	}
 	
 	public void deleteBoard(BoardVO vo) {
