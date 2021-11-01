@@ -14,10 +14,10 @@ public class BoardDAOSpring  {
 		private JdbcTemplate jdbcTemplate;
 	
 	//SQL 관련 명령어
-//	private final String BOARD_INSERT = "INSERT INTO BOARD(SEQ, TITLE, WRITER, CONTENT) "
-//            + "VALUES((SELECT NVL(MAX(SEQ),0)+1 FROM BOARD),?,?,?)";	
 	private final String BOARD_INSERT = "INSERT INTO BOARD(SEQ, TITLE, WRITER, CONTENT) "
-			+ "VALUES(?,?,?,?)";	
+            + "VALUES((SELECT NVL(MAX(SEQ),0)+1 FROM BOARD),?,?,?)";	
+//	private final String BOARD_INSERT = "INSERT INTO BOARD(SEQ, TITLE, WRITER, CONTENT) "
+//			+ "VALUES(?,?,?,?)";	
 	private final String BOARD_UPDATE = "UPDATE BOARD SET TITLE = ?, CONTENT = ? WHERE SEQ = ?";
 	private final String BOARD_DELETE = "DELETE FROM BOARD WHERE SEQ = ?";
 	private final String BOARD_GET = "SELECT * FROM BOARD WHERE SEQ = ?";
@@ -29,7 +29,7 @@ public class BoardDAOSpring  {
 	//글 등록
 	public void insertBoard(BoardVO vo) {
 		System.out.println("====> JDBC로 insertBoard() 기능 처리");
-		jdbcTemplate.update(BOARD_INSERT, vo.getSeq(), vo.getTitle(), vo.getWriter(), vo.getContent());
+		jdbcTemplate.update(BOARD_INSERT, vo.getTitle(), vo.getWriter(), vo.getContent());
 	}
 	
 	//글 수정

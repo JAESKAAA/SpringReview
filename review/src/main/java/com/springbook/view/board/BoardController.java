@@ -1,5 +1,7 @@
 package com.springbook.view.board;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springbook.biz.board.BoardService;
 import com.springbook.biz.board.BoardVO;
@@ -34,9 +37,18 @@ public class BoardController {
 	//글 등록
 	@RequestMapping("/insertBoard.do")
 	//기존 request에서 parameter 추출하는 방식 -> 커맨드객체 이용하여 VO에 컨테이너가 자동으로 파라미터를 셋팅해주면, 해당 VO를 사용하는 방식으로 변경
-	public String insertBoard(BoardVO vo) {
+	public String insertBoard(BoardVO vo) throws IOException {
+		//파일 업로드 처리
+		MultipartFile uploadFile = vo.getUploadFile();
+		if(!uploadFile.isEmpty()) {
+			//upload한 파일명을 문자열로 리턴
+			String fileName = uploadFile.getOriginalFilename();
+			//업로드한 파일을 매개변수의 위치에 저장
+			uploadFile.transferTo(new File("C:/Dev211/" + fileName));
+		}
+		System.out.println("처리됐다");
 		boardService.insertBoard(vo);
-		return "redirect:getBoardList.do";
+		return "getBoardList.do";
 	}
 	
 	//글 수정
