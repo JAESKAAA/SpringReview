@@ -15,5 +15,14 @@
 		<property name="maxUploadSize" value="100000"></property>
 	</bean>
 	
-	<mvc:annotation-driven></mvc:annotation-driven>
+	<!-- XML을 이용한 예외처리 -->
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.ArithmericException">common/arithmeticError.jsp</prop>
+				<prop key="java.lang.NullPointerException">common/nullPointerError.jsp</prop>
+			</props>
+		</property>
+		<property name="defaultErrorView" value="common/error.jsp"></property>
+	</bean>
 </beans>
