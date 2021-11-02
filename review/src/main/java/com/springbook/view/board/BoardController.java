@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,16 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
+	
+	@RequestMapping("/dataTransform.do")
+	@ResponseBody
+	public List<BoardVO> dataTransform(BoardVO vo){
+		vo.setSearchCondition("TITLE");
+		vo.setSearchKeyword("");
+		List<BoardVO> boardList = boardService.getBoardList(vo);
+		
+		return boardList;
+	}
 	
 	//검색 조건 목록 설정
 	@ModelAttribute("conditionMap")

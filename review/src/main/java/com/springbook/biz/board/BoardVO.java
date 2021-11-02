@@ -4,6 +4,8 @@ import java.sql.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class BoardVO {
 	private int seq;
 	private String title;
@@ -54,12 +56,15 @@ public class BoardVO {
 		this.cnt = cnt;
 	}
 	
+	@JsonIgnore
 	public String getSearchCondition() {
 		return searchCondition;
 	}
 	public void setSearchCondition(String searchCondition) {
 		this.searchCondition = searchCondition;
 	}
+	
+	@JsonIgnore
 	public String getSearchKeyword() {
 		return searchKeyword;
 	}
@@ -67,7 +72,7 @@ public class BoardVO {
 		this.searchKeyword = searchKeyword;
 	}
 	
-	
+	@JsonIgnore
 	public MultipartFile getUploadFile() {
 		return uploadFile;
 	}
