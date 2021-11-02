@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- BoardDAO의 역할을 대신하게 될 것임 -->
+<mapper namespace="boardDAO">
+	
+	<resultMap type="board" id="boardResult">
+		<id property="seq" column="SEQ"/>
+		<result property="title" column="TITLE"></result>
+		<result property="writer" column="WRITER"></result>
+		<result property="content" column="CONTENT"></result>
+		<result property="regDate" column="REGDATE"></result>
+		<result property="cnt" column="CNT"></result>
+	</resultMap>
+	<insert id="insertBoard">
+		<![CDATA[
+		INSERT INTO BOARD(SEQ, TITLE, WRITER, CONTENT)
+					VALUES((SELECT NVL(MAX(SEQ),0)+1 FROM BOARD), #{title}, #{writer}, #{content})
+		]]>
+	</insert>
+	
+	<update id="updateBoard">
+		UPDATE BOARD SET TITLE=#{title}, CONTENT=#{content} WHERE SEQ=#{seq}
+	</update>
+	
+	<delete id="deleteBoard">
+		DELETE BOARD WHERE SEQ=#{seq}
+	</delete>
+	
+	<select id="getBoard" resultType="board">
+		SELECT * FROM BOARD WHERE SEQ=#{seq}
+	</select>
+	
+	<select id="getBoardList" parameterType="board" resultMap="boardResult">
+		SELECT * FROM BOARD
+			WHERE TITLE LIKE '%' || #{searchKeyword} || '%'
+			ORDER BY SEQ DESC
+	</select>
+	
+
+</mapper>
