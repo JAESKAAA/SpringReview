@@ -30,7 +30,7 @@
 	</bean>
 	
 	<!-- Transaction 설정 -->
-	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
@@ -55,6 +55,15 @@
 	<!-- SqlSessionTemplate 등록 -->
 	<bean class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sessionFactory"></constructor-arg>
+	</bean>
+	
+	<!-- 스프링과 JPA연동을 위한 Adaptor 설정 -->
+	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+	
+	<!-- DataSource와 jpaVendorAdaptor로 의존성 주입된 entityManagerFactory객체 등록 -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"></property>
 	</bean>
 	<!-- 
 	<bean id="log" class="com.springbook.biz.common.LogAdvice"></bean>
