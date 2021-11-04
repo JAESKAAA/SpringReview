@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springbook.biz.board.BoardListVO;
 import com.springbook.biz.board.BoardService;
 import com.springbook.biz.board.BoardVO;
@@ -104,6 +106,31 @@ public class BoardController {
 		List<BoardVO> boardList = (List<BoardVO>) boardService.getBoardList(vo);
 		model.addAttribute("boardList",boardList);
 		return "getBoardList.jsp";
+		
+	}
+	
+	@RequestMapping(value = "/searchBoardList.do", produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String searchBoardList(BoardVO vo) throws JsonProcessingException {
+		System.out.println("글 목록 검색 처리");
+		
+		//데이터를 Json으로 변환해줘야함
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> map = new HashMap<>();
+		
+		System.out.println("******searchKeyword => " + vo.getSearchKeyword());
+		
+		//Null Check
+		if(vo.getSearchCondition() == null) vo.setSearchCondition("TITLE");
+		if(vo.getSearchKeyword() == null) vo.setSearchKeyword("");
+		
+		List<BoardVO> boardList = boardService.getBoardList(vo);
+		System.out.println("*******두번째 keyword"+vo.getSearchKeyword());
+		map.put("boardList", boardList);
+		
+		String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
+		System.out.println("****json => " + json);
+		return json;
 		
 	}
 }
