@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.springbook.biz.board.BoardService;
 import com.springbook.biz.board.BoardVO;
-import com.springbook.biz.common.Log4jAdvice;
-import com.springbook.biz.common.LogAdvice;
+import com.springbook.biz.board.Criteria;
 
 @Service("boardService") //클라이언트에서 getBean에서 해당값을 찾아 매핑함
 /*
@@ -36,7 +35,11 @@ public class BoardServiceImpl implements BoardService{
 		return boardDAO.getBoard(vo);
 	}
 	
-	public List<BoardVO> getBoardList(BoardVO vo) {
-		return boardDAO.getBoardList(vo);
+	public List<BoardVO> getBoardList(BoardVO vo, Criteria cri) {
+		return boardDAO.getBoardList(vo, cri);
+	}
+	
+	public int selectBoardCount(BoardVO vo) {
+		return boardDAO.selectBoardCount(vo);
 	}
 }

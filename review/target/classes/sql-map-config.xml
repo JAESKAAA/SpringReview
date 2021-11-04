@@ -3,6 +3,8 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+	<!-- JdbcType check 관련 이슈로 하기 세팅값 추가해줌 -->
+	<settings> <setting name="jdbcTypeForNull" value="NULL" /> </settings>
 		<!-- Alias 설정 -->
 	<typeAliases>
 	<!-- alias는 board-mapping.xml에서 resultType 속성값으로 사용됨(매핑됨) -->

@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springbook.biz.board.BoardListVO;
 import com.springbook.biz.board.BoardService;
 import com.springbook.biz.board.BoardVO;
+import com.springbook.biz.board.Criteria;
+import com.springbook.biz.board.PageVO;
 
 @Controller
 @SessionAttributes("board")
@@ -31,10 +33,10 @@ public class BoardController {
 	
 	@RequestMapping("/dataTransform.do")
 	@ResponseBody
-	public BoardListVO dataTransform(BoardVO vo){
+	public BoardListVO dataTransform(BoardVO vo, Criteria cri){
 		vo.setSearchCondition("TITLE");
 		vo.setSearchKeyword("");
-		List<BoardVO> boardList = boardService.getBoardList(vo);
+		List<BoardVO> boardList = boardService.getBoardList(vo, cri);
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setBoardList(boardList);
 		return boardListVO;
@@ -99,19 +101,27 @@ public class BoardController {
 								 * @RequestParam(value="searchCondition", defaultValue="TITLE", required=false)
 								 * String keyword,
 								 */
-								BoardVO vo, Model model) {
+								BoardVO vo, Model model, Criteria cri) {
+		System.out.println("글 목록 검색처리");
+		System.out.println("cri에 PageNum ==> "+ cri.getPageNum());
+		System.out.println("cri에 Amount==> "+ cri.getAmount());
 		//Null Check
 		if(vo.getSearchCondition() == null) vo.setSearchCondition("TITLE");
 		if(vo.getSearchKeyword() == null) vo.setSearchKeyword("");
-		List<BoardVO> boardList = (List<BoardVO>) boardService.getBoardList(vo);
+		
+		int total = boardService.selectBoardCount(vo);
+		System.out.println("total==> " +total);
+		
+		List<BoardVO> boardList = (List<BoardVO>) boardService.getBoardList(vo, cri);
 		model.addAttribute("boardList",boardList);
+		model.addAttribute("pageMaker", new PageVO(cri, total));
 		return "getBoardList.jsp";
 		
 	}
 	
 	@RequestMapping(value = "/searchBoardList.do", produces = "application/text; charset=utf8")
 	@ResponseBody
-	public String searchBoardList(BoardVO vo) throws JsonProcessingException {
+	public String searchBoardList(BoardVO vo, Criteria cri) throws JsonProcessingException {
 		System.out.println("글 목록 검색 처리");
 		
 		//데이터를 Json으로 변환해줘야함
@@ -124,7 +134,7 @@ public class BoardController {
 		if(vo.getSearchCondition() == null) vo.setSearchCondition("TITLE");
 		if(vo.getSearchKeyword() == null) vo.setSearchKeyword("");
 		
-		List<BoardVO> boardList = boardService.getBoardList(vo);
+		List<BoardVO> boardList = boardService.getBoardList(vo, cri);
 		System.out.println("*******두번째 keyword"+vo.getSearchKeyword());
 		map.put("boardList", boardList);
 		

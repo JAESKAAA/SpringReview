@@ -33,16 +33,44 @@
 	</select>
 	
 	<select id="getBoardList" parameterType="board" resultMap="boardResult">
-		SELECT * FROM BOARD
-			WHERE 1 = 1
-		<if test="searchCondition == 'TITLE'">
+		<!-- 서브쿼리 부분 : 현재 페이지 번호 (pageNum) *  출력하고 싶은 데이터수 (amount) 
+						ex. 현재 선택된 페이지가 2인 경우 2 *10 해서 ROWNUM가 20 이하의 데이터만 출력됨
+			메인 쿼리 부분: 서브쿼리에서 뽑힌 데이터에서 이전 페이지번호의 데이터수보다 큰 데이터를 전부 표출해줌
+						ex. 서브쿼리에서 데이터가 20개 넘어왔는데, 조건절에 pageNum-1 = 1 , amount=10이라서 10보다 큰 ROWNUM만 출력함			-->
+		<![CDATA[
+		SELECT * FROM (
+			SELECT ROWNUM RN,
+					SEQ,
+					TITLE,
+					WRITER,
+					CONTENT,
+					REGDATE,
+					CNT
+				FROM BOARD
+				WHERE 1 = 1
+					AND ROWNUM <= #{criteria.pageNum} * #{criteria.amount}
+		]]>
+		<if test="board.searchCondition == 'TITLE'">
 			AND TITLE LIKE '%' || #{searchKeyword} || '%'
 		</if>
-		<if test="searchCondition == 'CONTENT'">
+		<if test="board.searchCondition == 'CONTENT'">
 			AND CONTENT LIKE '%' || #{searchKeyword} || '%'
 		</if>
-			ORDER BY SEQ DESC
+		<![CDATA[
+		)
+		WHERE RN > (#{criteria.pageNum} - 1) * #{criteria.amount}
+		]]>
 	</select>
 	
+	<select id="selectBoardCount" resultType="int">
+		SELECT COUNT(*) FROM BOARD
+				WHERE 1 = 1
+				<if test="searchCondition == 'TITLE'">
+					AND TITLE LIKE '%' || #{searchKeyword} || '%'
+				</if>
+				<if test="searchCondition == 'CONTENT'">
+					AND CONTENT LIKE '%' || #{searchKeyword} || '%'
+				</if>
+	</select>
 
 </mapper>

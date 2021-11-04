@@ -11,6 +11,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 <title> 글 목록</title>
+<style>
+	ul{
+		list-style : none;
+		width: 20%;
+		display: inline-block;
+	}
+	li {
+		float: left;
+		margin-left: 5px;
+	}
+</style>
 <script src="js/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -19,7 +30,9 @@
 		<h3>${user.name }님 환영합니다...<a href="logout.do">Log-out</a></h3>
 		
 		<!-- 검색시작 -->
-		<form id="form_search">
+		<form action="getBoardList.do" id="form_search" class="listForm" method="post" >
+			<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">
+			<input type="hidden" name="amount" value="${pageMaker.cri.amount }">
 			<table border="1" cellpadding="0" cellspacing="0" width="700">
 				<tr>
 					<td align="right">
@@ -55,12 +68,33 @@
 				</tr>
 			</c:forEach>
 		</table>
+		<div style="text-align:center;">
+			<ul class="pagination">
+				<c:if test="${pageMaker.prev }">
+					<li class="pagination_button">
+						<a href="${pageMaker.startPage - 1 }">Previous</a>
+					</li>
+				</c:if>
+				
+				<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }" >
+					<li class="pagination_button">
+						<a href="${num }">${num }</a>
+					</li>
+				</c:forEach>
+				
+				<c:if test="${pageMaker.next }">
+					<li class="pagination_button">
+						<a href="${pageMaker.endPage +1 }">Next</a>
+					</li>
+				</c:if>
+			</ul>
+		</div>
 		<br>
 		<a href="insertBoard.jsp">새글 등록</a>
 	</center>
 <script>
 	$(document).ready(function(){
-		$("#search_btn").click(function(){
+		 /* $("#search_btn").click(function(){
 			$.ajax({
 				url : 'searchBoardList.do',
 				type : 'POST',
@@ -94,6 +128,14 @@
 					console.log(e);
 				}
 			});
+		});  */
+		var listForm = $(".listForm");
+		
+		$(".pagination_button a").on("click", function(e) {
+			e.preventDefault();
+			
+			listForm.find("input[name='pageNum']").val($(this).attr("href"));
+			listForm.submit();
 		});
 	});
 </script>

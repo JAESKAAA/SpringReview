@@ -1,14 +1,15 @@
 package com.springbook.biz.board.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.springbook.biz.board.BoardVO;
+import com.springbook.biz.board.Criteria;
 
 @Repository
 public class BoardDAOMybatis{
@@ -33,8 +34,17 @@ public class BoardDAOMybatis{
 		System.out.println("===> Mybatis를 통한 getBoard() 기능 처리");
 		return (BoardVO) mybatis.selectOne("boardDAO.getBoard",vo);
 	}
-	public List<BoardVO> getBoardList(BoardVO vo) {
+	public List<BoardVO> getBoardList(BoardVO vo, Criteria cri) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("board", vo);
+		cri.setStartNum((cri.getPageNum() -1)*cri.getAmount());
+		System.out.println("MyBatis에서 Cri StartNum 찍은거==>" + (cri.getPageNum() -1) * cri.getAmount());
+		paramMap.put("criteria", cri);
 		System.out.println("===> Mybatis를 통한 getBoardList() 기능 처리");
-		return mybatis.selectList("boardDAO.getBoardList",vo);
+		//맵을 넣어줌으로써 VO와 cri정보를 같이 담아줄 수 있음
+		return mybatis.selectList("boardDAO.getBoardList",paramMap);
+	}
+	public int selectBoardCount(BoardVO vo) {
+		return mybatis.selectOne("boardDAO.selectBoardCount", vo);
 	}
 }
