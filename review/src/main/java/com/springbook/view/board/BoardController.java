@@ -47,7 +47,7 @@ public class BoardController {
 		conditionMap.put("제목", "TITLE" );
 		conditionMap.put("내용", "CONTENT" );
 		return conditionMap;
-	}
+	}	
 	
 	//글 등록
 	@RequestMapping("/insertBoard.do")
